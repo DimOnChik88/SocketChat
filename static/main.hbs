@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Chatik</title>
+    </head>
+    <body>
+
+
+    <input type="text" class="regName" placeholder="Enter NickName" >
+    <input type="password" class="regPassword" placeholder="Enter Password">
+    <button class="registration">Registration</button>
+    <br>
+
+    <input type="text" class="authName" placeholder="Enter NickName">
+    <input type="password" class="authPassword" placeholder="Enter Password">
+    <button class="login">LOG IN</button>
+    <br>
+
+    <input type="text" class="text">
+    <button class="publicCHat">Send to All</button>
+<br>
+
+<button class="joinRoom">Join to room</button>
+<br>
+
+<input type="text" class="textToRoom">
+    <button class="roomCHat">Send inside room</button>
+
+<script src="/socket.io/socket.io.js"></script>
+
+    <script>
+const socket = io();
+
+const [regName] = document.getElementsByClassName('regName');
+const [regPassword] = document.getElementsByClassName('regPassword');
+const [registration] = document.getElementsByClassName('registration');
+
+const [authName] = document.getElementsByClassName('authName');
+const [authPassword] = document.getElementsByClassName('authPassword');
+const [login] = document.getElementsByClassName('login');
+
+const [text] = document.getElementsByClassName('text');
+const [textToRoom] = document.getElementsByClassName('textToRoom');
+const [publicCHat] = document.getElementsByClassName('publicCHat');
+const [joinRoom] = document.getElementsByClassName('joinRoom');
+const [roomCHat] = document.getElementsByClassName('roomCHat');
+
+
+
+registration.onclick = () => {
+    socket.emit('registration', {
+        name: regName.value,
+        password: regPassword.value,
+        roomID: 2
+    });
+    regName.value = "";
+    regPassword.value = "";
+};
+
+login.onclick = () => {
+    socket.emit('login', {
+        name: authName.value,
+        password: authPassword.value,
+        roomID: 2
+    });
+    authName.value = "";
+    authPassword.value = "";
+}
+
+
+joinRoom.onclick = () => {
+    socket.emit('joinRoom', socket.roomID = 1)
+};
+
+roomCHat.onclick = () => {
+    socket.emit('msg', textToRoom.value);
+    textToRoom.value = "";
+
+}
+
+
+
+publicCHat.onclick = ()=>{
+    socket.emit("message", text.value);
+    text.value = "";
+
+}
+
+socket.on('respMessage', resp =>{
+
+    const divka = document.createElement('div');
+
+    divka.style.border = '2px solid grey';
+    divka.style.background = 'yellow';
+    divka.innerText = `User: ${resp.name} \n Message: ${resp.data}`;
+
+    document.body.appendChild(divka);
+    console.log(resp.name);
+    console.log(resp.data);
+});
+
+socket.on('msg_resp', resp => {
+    const divka = document.createElement('div');
+
+    divka.style.border = '2px solid grey';
+    divka.style.background = 'yellow';
+    divka.innerText = `User: ${resp.name} \n Message: ${resp.data}`;
+
+    document.body.appendChild(divka);
+    console.log(resp.name);
+    console.log(resp.data);
+})
+
+socket.on('user_disc', ()=>{
+    const divka = document.createElement('div');
+    divka.style.border = '2px solid black';
+    divka.style.background = 'red';
+    divka.innerText =`User ${socket.name} disconnect`
+    document.body.appendChild(divka);
+
+})
+
+
+
+</script>
+
+
+</body>
+</html>
