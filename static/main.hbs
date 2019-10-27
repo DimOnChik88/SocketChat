@@ -10,24 +10,24 @@
     <body>
 
 
-    <input type="text" class="regName" placeholder="Enter NickName" >
-    <input type="password" class="regPassword" placeholder="Enter Password">
+    <input type="text" class="regName" placeholder="Enter NickName" required>
+    <input type="password" class="regPassword" placeholder="Enter Password" required>
     <button class="registration">Registration</button>
     <br>
 
-    <input type="text" class="authName" placeholder="Enter NickName">
-    <input type="password" class="authPassword" placeholder="Enter Password">
+    <input type="text" class="authName" placeholder="Enter NickName" required>
+    <input type="password" class="authPassword" placeholder="Enter Password" required>
     <button class="login">LOG IN</button>
     <br>
 
-    <input type="text" class="text">
+    <input type="text" class="text" required>
     <button class="publicCHat">Send to All</button>
 <br>
 
-<button class="joinRoom">Join to room</button>
+<button class="joinRoom">Join to another room</button>
 <br>
 
-<input type="text" class="textToRoom">
+<input type="text" class="textToRoom" required>
     <button class="roomCHat">Send inside room</button>
 
 <script src="/socket.io/socket.io.js"></script>
@@ -73,7 +73,7 @@ login.onclick = () => {
 
 
 joinRoom.onclick = () => {
-    socket.emit('joinRoom', socket.roomID = 1)
+    socket.emit('joinRoom')
 };
 
 roomCHat.onclick = () => {
@@ -96,12 +96,23 @@ socket.on('respMessage', resp =>{
 
     divka.style.border = '2px solid grey';
     divka.style.background = 'yellow';
-    divka.innerText = `User: ${resp.name} \n Message: ${resp.data}`;
+    divka.innerText = `User: ${resp.name} \n Message: ${resp.message}`;
 
     document.body.appendChild(divka);
     console.log(resp.name);
-    console.log(resp.data);
+    console.log(resp.message);
 });
+
+socket.on('authMessage', resp => {
+    const divka = document.createElement('div');
+
+    divka.style.border = '1px solid black';
+    divka.style.background = 'grey';
+    divka.innerText = `User:  ${resp.name} joined to chat`;
+
+    document.body.appendChild(divka);
+
+})
 
 socket.on('msg_resp', resp => {
     const divka = document.createElement('div');
@@ -112,14 +123,14 @@ socket.on('msg_resp', resp => {
 
     document.body.appendChild(divka);
     console.log(resp.name);
-    console.log(resp.data);
+    console.log(resp.message);
 })
 
-socket.on('user_disc', ()=>{
+socket.on('user_disc', resp=>{
     const divka = document.createElement('div');
     divka.style.border = '2px solid black';
     divka.style.background = 'red';
-    divka.innerText =`User ${socket.name} disconnect`
+    divka.innerText =`User:  ${resp.name} disconnect`
     document.body.appendChild(divka);
 
 })

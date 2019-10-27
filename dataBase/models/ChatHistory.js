@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) =>{
             allowNull: false
         },
         fromUser: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false
         },
         toRoom: {
@@ -23,10 +23,7 @@ module.exports = (sequelize, DataTypes) =>{
         timestamps: false
     })
     const Room = sequelize.import('./Room.js');
-    const User = sequelize.import('./User.js');
-
     ChatHistory.belongsTo(Room, {foreignKey: 'roomID'});
-    ChatHistory.belongsTo(User, {foreignKey: 'id'});
 
     return ChatHistory;
 }
